@@ -11,7 +11,9 @@
 - fix_marks (Исправляет плохие оценки)
 
 - main():
+  
     student_name - имя студента
+  
     subject_for_commendation - предмет
 ## Как запустить?
 
