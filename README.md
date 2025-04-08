@@ -10,30 +10,22 @@
 
 - fix_marks (Исправляет плохие оценки)
 
-## Использование
+- main():
+    student_name - имя студента
+    subject_for_commendation - предмет
+## Как запустить?
 
-1. Положить файл в корневую папку сайта
+1. Положить скрипт scipts.py возле manage.py
 
-2. Запустите Django shell:
+2. Запустить Django shell
 ```
 python manage.py shell
 ```
-
-3. Импортироваь функции:
+3. Импортировать все функции
 ```
-from scripts import create_commendation, remove_chastisements, fix_marks
+from scripts import main, get_student, create_commendation, remove_chastisements, fix_marks
 ```
- 
-4. Вызов функции:
-
+4. Запустить 
 ```
-create_commendation("Фролов Иван", "Музыка")
-```
-```
-remove_chastisements("Фролов Иван")
-```
-```
-from datacenter.models import Schoolkid
-child = Schoolkid.objects.get(full_name__contains="Фролов Иван")
-fix_marks(child)
+main()
 ```

@@ -1,15 +1,26 @@
-def create_commendation(schoolkid_name, subject_title):
-    from datacenter.models import Schoolkid, Lesson, Commendation
-    import random
+from datacenter.models import Schoolkid, Lesson, Commendation, Chastisement, Mark
+import random
 
-    text = random.choice(["Молодец!", "Отлично!"])
+COMPLIMENTS = ["Молодец!", "Отлично!"]
+
+
+def get_student(schoolkid_name):
     try:
-        schoolkid = Schoolkid.objects.get(full_name__contains=schoolkid_name)
+        student = Schoolkid.objects.get(full_name__contains=schoolkid_name)
+        return student
     except Schoolkid.MultipleObjectsReturned:
-        print(f"Найдено несколько учеников с именем '{schoolkid_name}'")
-        return
+        print(f"Найдено несколько учеников с именем {schoolkid_name}")
+        return None
     except Schoolkid.DoesNotExist:
-        print(f"Ученик с именем '{schoolkid_name}' не найден")
+        print(f"Ученик с именем '{schoolkid_name}' не найден.")
+        return None
+
+
+def create_commendation(schoolkid_name, subject_title):
+    text = random.choice(COMPLIMENTS)
+    schoolkid = get_student(schoolkid_name)
+
+    if not schoolkid:
         return
 
     lesson = Lesson.objects.filter(
@@ -37,7 +48,6 @@ def create_commendation(schoolkid_name, subject_title):
 
 
 def remove_chastisements(schoolkid_name):
-    from datacenter.models import Schoolkid, Chastisement
     try:
         student = Schoolkid.objects.get(full_name__contains=schoolkid_name)
     except Schoolkid.MultipleObjectsReturned:
@@ -51,8 +61,21 @@ def remove_chastisements(schoolkid_name):
 
 
 def fix_marks(schoolkid):
-    from datacenter.models import Mark
-    bad_marks = Mark.objects.filter(schoolkid=schoolkid, points__in=[2, 3])
-    for mark in bad_marks:
-        mark.points = 5
-        mark.save()
+    Mark.objects.filter(schoolkid=schoolkid, points__in=[2, 3]).update(points=5)
+
+
+def main():
+    student_name = "Фролов Иван"
+    subject_for_commendation = "Музыка"
+
+    student = get_student(student_name)
+    if student:
+        fix_marks(student)
+
+    remove_chastisements(student_name)
+
+    create_commendation(student_name, subject_for_commendation)
+
+
+if __name__ == '__main__':
+    main()
